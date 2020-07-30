@@ -23,6 +23,18 @@ class SimpleMap extends Component {
     newMarker: [],
   };
 
+  showMap = () => {
+    return <GoogleMapReact
+      bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
+      defaultCenter={this.state.center}
+      defaultZoom={this.state.zoom}
+      yesIWantToUseGoogleMapApiInternals
+    >
+      {this.showMarker()}
+      
+    </GoogleMapReact>
+  }
+
   getCoordinate = (event) => {
     event.preventDefault()
     console.log(event.target)
@@ -110,40 +122,45 @@ class SimpleMap extends Component {
 
     fetch((deleteURL + eventID), { method: "DELETE" })
   }
+
+  handleLogin = (event) => {
+
+  }
+
+  showAddMarkerForm = () => {
+    return (<form> 
+              <label>Don't see your park?</label>
+              <input 
+                type="text"
+                name="address"
+                onChange={this.handleNewMarker}
+              />
+              <button onClick={this.getCoordinate}>Find My Playground!</button>
+            </form>)
+  }
+
+  showParkCard = () => {
+    return (
+      <ParkCard 
+        park={this.state.park} 
+        handleDelete={this.handleDelete}
+        handleAddEvent={this.handleAddEvent}
+      /> 
+    )
+  }
   
   render() {
     if (this.state.marker.length > 1)
     return (
-      // Important! Always set the container height explicitly
       <div className='App'>
         {(this.state.park.text) 
         ? <>
-            <ParkCard 
-              park={this.state.park} 
-              handleDelete={this.handleDelete}
-              handleAddEvent={this.handleAddEvent}
-            /> 
+            {this.showParkCard()}
           </>
           : null}
         <div className='map' >
-          <GoogleMapReact
-            bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
-            defaultCenter={this.state.center}
-            defaultZoom={this.state.zoom}
-            yesIWantToUseGoogleMapApiInternals
-          >
-            {this.showMarker()}
-            
-          </GoogleMapReact>
-          <form> 
-            <label>Don't see your park?</label>
-            <input 
-              type="text"
-              name="address"
-              onChange={this.handleNewMarker}
-            />
-          <button onClick={this.getCoordinate}>Find My Playground!</button>
-          </form>
+          {this.showMap()}
+          {this.showAddMarkerForm()}
         </div>
       </div>
     );
