@@ -1,6 +1,7 @@
 import React from 'react'
-import { Marker, InfoWindow } from 'google-map-react';
+import { FaBolt } from 'react-icons/fa'
 import Axios from 'axios';
+import './App.css';
 const mapAPI = 'https://maps.googleapis.com/maps/api/geocode/json'
 
 
@@ -10,42 +11,37 @@ export default class MapMarker extends React.Component{
     };
 
     handleMouseOver = e => {
+        e.stopPropagation()
         this.setState({
             showInfoWindow: true
         });
     };
 
     handleMouseExit = e => {
+        e.stopPropagation()
         this.setState({
             showInfoWindow: false
         });
     };
 
+    handleTargetClick = e => {
+        e.stopPropagation()
+        this.props.handleClick(this.props)
+    }
+
     render(){
-        const { showInfoWindow } = this.state;
-        const markers =  this.props.places.map(place => {
-           return (
-               <Marker 
-                    position={place.latitude, place.longitude}
-                    onMouseOver={this.handleMouseOver}
-                    onMouseOut={this.handleMouseExit}>
-                        {showInfoWindow && (
-                            <InfoWindow>
-                                <h4>{place.name}</h4>
-                            </InfoWindow>
-                        )}
-                </Marker>
-            //    <div className='map-marker'>
-            //        <h4>{name}</h4>
-            //        lat={latitude}
-            //        lng={longitude}
-            //    </div>
-           )
-        })
+        const { text } = this.props
         return (
-            <>
-                {markers}
-            </>
-        )
-   }
+            <div
+                onMouseEnter={this.handleMouseOver} 
+                onMouseLeave={this.handleMouseExit}
+                onClick={this.handleTargetClick}>
+                <FaBolt />
+                {this.state.showInfoWindow && (
+                    <div className="map-card">
+                        <h4>{text}</h4>
+                    </div>
+                )}
+            </div>
+        )}
 }
