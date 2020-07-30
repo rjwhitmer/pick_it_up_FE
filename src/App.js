@@ -148,23 +148,40 @@ class SimpleMap extends Component {
       /> 
     )
   }
+
+  loginForm = () => {
+    return (
+      <div>
+        <form className='login-form'>
+          <label>Name:</label>
+          <input type='text' name='name' />
+          <label>Password:</label>
+          <input type='password' name='password' />
+          <button onClick={this.login}>Hup!</button>
+        </form>
+      </div>
+    )
+  }
   
   render() {
-    if (this.state.marker.length > 1)
-    return (
-      <div className='App'>
-        {(this.state.park.text) 
-        ? <>
-            {this.showParkCard()}
-          </>
-          : null}
-        <div className='map' >
-          {this.showMap()}
-          {this.showAddMarkerForm()}
+    if (!window.location.token)
+      return <div>{this.loginForm()}</div>
+    else
+      if (this.state.marker.length > 1)
+      return (
+        <div className='App'>
+          {(this.state.park.text) 
+          ? <>
+              {this.showParkCard()}
+            </>
+            : null}
+          <div className='map' >
+            {this.showMap()}
+            {this.showAddMarkerForm()}
+          </div>
         </div>
-      </div>
-    );
-    else return null
+      );
+      else return null
   }
 }
  

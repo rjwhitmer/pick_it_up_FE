@@ -40,3 +40,13 @@
 .park-event > h5 {
   margin: 3px;
 }
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-form > label {
+  padding: 20px;
+}
