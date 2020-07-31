@@ -7,11 +7,11 @@ import ParkCard from './ParkCard';
 import UserEvents from './UserEvents'
 import LoginForm from './LoginForm';
 
-const userID = window.value
 const mapAPI = 'https://maps.googleapis.com/maps/api/geocode/json'
 const parkURL = 'http://localhost:3000/parks/'
 const deleteURL = 'http://localhost:3000/sporting_events/'
 const userEventsURL = 'http://localhost:3000/user_events'
+const deleteUserEventsURL = 'http://localhost:3000/user_events'
 const userURL = `http://localhost:3000/users/`
 
 class SimpleMap extends Component {
@@ -43,7 +43,6 @@ class SimpleMap extends Component {
 
   getCoordinate = (event) => {
     event.preventDefault()
-    console.log(event.target)
     Axios.get(mapAPI, {
       params: {
         address: this.state.newMarker, 
@@ -96,12 +95,16 @@ class SimpleMap extends Component {
 
   showNewMarker = (location) => {
     this.setState({ marker: [...this.state.marker, location]})
+    console.log(this.state.marker)
   }
 
   handleClick = (location) => {
-    (this.state.park.text === location.text)
-    ? this.setState({ park: [] })
-    : this.setState({ park: location })
+    if (!location.events)
+      return null
+    else 
+      (this.state.park.text === location.text)
+      ? this.setState({ park: [] })
+      : this.setState({ park: location })
 }
 
   handleAddEvent = (newEvent) => {
@@ -127,6 +130,14 @@ class SimpleMap extends Component {
     this.setState({park})
 
     fetch((deleteURL + eventID), { method: "DELETE" })
+  }
+  
+  handleDeleteUserEvent = (event) => {
+    const eventID = event.target.value
+    const filteredEvents = this.state.userEvents.filter(event => event.id != eventID)
+    this.setState({userEvents: filteredEvents})
+
+    fetch((deleteUserEventsURL + eventID), { method: "DELETE" })
   }
 
   handleRsvp = (event) => {
@@ -167,7 +178,7 @@ class SimpleMap extends Component {
     return (<div className='user-events-container'>
               <UserEvents 
                 events={this.state.userEvents}
-                handleDelete={this.handleDelete}
+                handleDelete={this.handleDeleteUserEvent}
               />
             </div>
     )}
@@ -215,8 +226,8 @@ class SimpleMap extends Component {
                   className='log-out' 
                   onClick={this.handleLogOut}
                 >Log-out</button>
-                <h2>My games!</h2>
-                {this.showUserEvents()}
+                {/* <h2>My games!</h2>
+                {this.showUserEvents()} */}
                 <div className='App'>
                   {(this.state.park.text) 
                   ? <>

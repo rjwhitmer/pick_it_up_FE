@@ -1,7 +1,6 @@
 import React from 'react'
 
 export default function UserEvents(props){
-    console.log(props)
     const handleDate = (date) => {
         const prettyDate = date.split('-')
         return (`${prettyDate[1]}-${prettyDate[2]}-${prettyDate[0]}`)
@@ -26,7 +25,7 @@ export default function UserEvents(props){
                     <h5>Time: {handleTime(event.event_time)}</h5>
                     <button 
                         className='delete-event' 
-                        onClick={props.handleDelete}
+                        onClick={props.handleDeleteUserEvent}
                         value={event.id}
                         // id={props.park.id}
                     >Nevermind</button>

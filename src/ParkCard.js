@@ -28,11 +28,11 @@ export default class ParkCard extends React.Component{
                             value={event.id}
                             id={this.props.park.id}
                         >X</button>
-                        <button 
+                        {/* <button 
                             className='rsvp'
                             value={event.id}
                             onClick={this.props.handleRsvp}
-                        >R.S.V.P.</button>
+                        >R.S.V.P.</button> */}
                     </div>
                 </div>
             )
@@ -46,7 +46,8 @@ export default class ParkCard extends React.Component{
 
     handleTime = (time) => {
         const prettyTime = new Date(time.split('Z')[0])
-        return prettyTime.toLocaleString().split(',')[1]
+        const finalTime = (prettyTime.toLocaleString().split(',')[1]).split(':')
+        return `${finalTime[0]}:${finalTime[1]} ${finalTime[2].split(' ')[1]}`
     }
 
     handleCapitalize = (string) => {

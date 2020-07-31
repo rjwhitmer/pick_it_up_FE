@@ -40,7 +40,9 @@ export default class MapMarker extends React.Component{
                 {this.state.showInfoWindow && (
                     <div className="map-card">
                         <h4>{text}</h4>
-                        <h4>Upcoming Events! {events.length}</h4>
+                        {(events)
+                            ? <h4>Upcoming Events! {events.length}</h4>
+                            : <h4>No Upcoming Events!</h4>}
                     </div>
                 )}
             </div>
