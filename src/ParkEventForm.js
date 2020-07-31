@@ -5,6 +5,8 @@ export default class ParkEventForm extends React.Component{
     state = {
         sport: "",
         numberOfPlayers: 0,
+        date: "",
+        time: "",
     }
 
     handleSportChange = (event) => {
@@ -21,6 +23,20 @@ export default class ParkEventForm extends React.Component{
         })
     }
 
+    handleDateChange = (event) => {
+        event.stopPropagation()
+        this.setState({
+            date: event.target.value
+        })
+    }
+
+    handleTimeChange = (event) => {
+        event.stopPropagation()
+        this.setState({
+            time: event.target.value
+        })
+    }
+
     handleSubmit = (event) => {
         event.preventDefault()
         const parkID = this.props.park.$dimensionKey
@@ -32,6 +48,8 @@ export default class ParkEventForm extends React.Component{
             body: JSON.stringify({
                 sport: this.state.sport,
                 players: this.state.numberOfPlayers,
+                event_date: this.state.date,
+                event_time: this.state.time,
                 park_id: parkID
             })
         })
@@ -43,19 +61,31 @@ export default class ParkEventForm extends React.Component{
     render() {
         return (
             <div>
-                <form>
+                <form className='event-form'>
                     <h3>Pick it up!</h3>
-                    <h5>Sport:</h5>
+                    <h6>Sport:</h6>
                     <input 
                         type='text' 
                         name='sport' 
                         onChange={this.handleSportChange}
                     />
-                    <h5>Number of Players:</h5>
+                    <h6>Number of Players:</h6>
                     <input 
                         type='number' 
                         name='players'
                         onChange={this.handlePlayerChange}
+                    />
+                    <h6>Date:</h6> 
+                    <input 
+                        type='date'
+                        name='date'
+                        onChange={this.handleDateChange}
+                    />
+                    <h6>Time:</h6>
+                    <input
+                        type='time'
+                        name='time'
+                        onChange={this.handleTimeChange}
                     />
                     <button type='submit' onClick={this.handleSubmit}>Let's Play!</button>
                 </form>

@@ -4,11 +4,15 @@ import MapMarker from './MapMarker'
 import './App.css';
 import Axios from 'axios';
 import ParkCard from './ParkCard';
-import ParkEventForm from './ParkEventForm'
+import UserEvents from './UserEvents'
+import LoginForm from './LoginForm';
 
+const userID = window.value
 const mapAPI = 'https://maps.googleapis.com/maps/api/geocode/json'
 const parkURL = 'http://localhost:3000/parks/'
 const deleteURL = 'http://localhost:3000/sporting_events/'
+const userEventsURL = 'http://localhost:3000/user_events'
+const userURL = `http://localhost:3000/users/`
 
 class SimpleMap extends Component {
   state = {
@@ -21,6 +25,8 @@ class SimpleMap extends Component {
     park: [],
     parkForm: false,
     newMarker: [],
+    userEvents: [],
+    login: false,
   };
 
   showMap = () => {
@@ -123,12 +129,51 @@ class SimpleMap extends Component {
     fetch((deleteURL + eventID), { method: "DELETE" })
   }
 
-  handleLogin = (event) => {
-
+  handleRsvp = (event) => {
+    const eventID = event.target.value
+    const userID = window.value
+    fetch(userEventsURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: userID,
+        event_id: eventID
+      })
+    })
+    // .then(response => response.json())
+    .then(this.getUserEvents())
   }
 
+  getUserEvents = () => {
+    const userID = window.value
+    fetch((userURL + userID), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .then(data => this.updateUserEvents(data))
+  }
+
+  updateUserEvents = (user) => {
+    const userEvents = user.sporting_events
+    this.setState({ userEvents })
+  }
+
+  showUserEvents = () => {
+    return (<div className='user-events-container'>
+              <UserEvents 
+                events={this.state.userEvents}
+                handleDelete={this.handleDelete}
+              />
+            </div>
+    )}
+
   showAddMarkerForm = () => {
-    return (<form> 
+    return (<form className='add-marker-form'> 
               <label>Don't see your park?</label>
               <input 
                 type="text"
@@ -145,41 +190,45 @@ class SimpleMap extends Component {
         park={this.state.park} 
         handleDelete={this.handleDelete}
         handleAddEvent={this.handleAddEvent}
+        handleRsvp={this.handleRsvp}
       /> 
     )
   }
 
-  loginForm = () => {
-    return (
-      <div>
-        <form className='login-form'>
-          <label>Name:</label>
-          <input type='text' name='name' />
-          <label>Password:</label>
-          <input type='password' name='password' />
-          <button onClick={this.login}>Hup!</button>
-        </form>
-      </div>
-    )
+  handleLogOut = () => {
+    window.localStorage.clear()
+    this.setState({ login: !this.state.login })
   }
-  
+
+  handleLogIn = () => {
+    this.setState({ login: !this.state.login })
+    this.getUserEvents()
+  }
+
   render() {
-    if (!window.location.token)
-      return <div>{this.loginForm()}</div>
+    if (!localStorage.getItem('token'))
+      return <LoginForm handleLogIn={this.handleLogIn}/>
     else
       if (this.state.marker.length > 1)
-      return (
-        <div className='App'>
-          {(this.state.park.text) 
-          ? <>
-              {this.showParkCard()}
-            </>
-            : null}
-          <div className='map' >
-            {this.showMap()}
-            {this.showAddMarkerForm()}
-          </div>
-        </div>
+      return (<>
+                <button 
+                  className='log-out' 
+                  onClick={this.handleLogOut}
+                >Log-out</button>
+                <h2>My games!</h2>
+                {this.showUserEvents()}
+                <div className='App'>
+                  {(this.state.park.text) 
+                  ? <>
+                      {this.showParkCard()}
+                    </>
+                    : null}
+                  <div className='map' >
+                    {this.showMap()}
+                    {this.showAddMarkerForm()}
+                  </div>
+                </div>
+              </>
       );
       else return null
   }

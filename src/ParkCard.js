@@ -6,7 +6,10 @@ import { render } from '@testing-library/react';
 export default class ParkCard extends React.Component{
     state = {
         parkForm: false,
-        parkEvents: []
+    }
+
+    showUserEvents = () => {
+        
     }
 
     showEvents = () => {
@@ -17,16 +20,33 @@ export default class ParkCard extends React.Component{
                         <h4>What are we playing?</h4>
                         <h5>{this.handleCapitalize(event.sport)}</h5>
                         <h5>Players Needed: {event.players}</h5>
+                        <h5>Date: {this.handleDate(event.event_date)}</h5>
+                        <h5>Time: {this.handleTime(event.event_time)}</h5>
                         <button 
                             className='delete-event' 
                             onClick={this.props.handleDelete}
                             value={event.id}
                             id={this.props.park.id}
                         >X</button>
+                        <button 
+                            className='rsvp'
+                            value={event.id}
+                            onClick={this.props.handleRsvp}
+                        >R.S.V.P.</button>
                     </div>
                 </div>
             )
         })
+    }
+
+    handleDate = (date) => {
+        const prettyDate = date.split('-')
+        return (`${prettyDate[1]}-${prettyDate[2]}-${prettyDate[0]}`)
+    }
+
+    handleTime = (time) => {
+        const prettyTime = new Date(time.split('Z')[0])
+        return prettyTime.toLocaleString().split(',')[1]
     }
 
     handleCapitalize = (string) => {
