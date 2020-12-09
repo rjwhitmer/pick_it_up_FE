@@ -31,7 +31,7 @@ class SimpleMap extends Component {
 
   showMap = () => {
     return <GoogleMapReact
-      bootstrapURLKeys={{ key: 'AIzaSyBUcpC0j7O6sKR5yAVVrKCsH08NSSqcQr0' }}
+      bootstrapURLKeys={{ key: process.env.GOOGLE_MAPS_KEY }}
       defaultCenter={this.state.center}
       defaultZoom={this.state.zoom}
       yesIWantToUseGoogleMapApiInternals
@@ -46,7 +46,7 @@ class SimpleMap extends Component {
     Axios.get(mapAPI, {
       params: {
         address: this.state.newMarker, 
-        key: 'AIzaSyBFsbA9ExFBxQ-u5bITuD3-vs1_72c85Ww'
+        key: process.env.GEOCODE_KEY
       }
     })
     .then(response => this.createNewMarker(response))
@@ -121,7 +121,7 @@ class SimpleMap extends Component {
 
   handleDelete = (event) => {
     const eventID = event.target.value
-    const filteredEvents = this.state.park.events.filter(event => event.id != eventID)
+    const filteredEvents = this.state.park.events.filter(event => event.id !== eventID)
     const park = {...this.state.park}
     park.events = filteredEvents
     this.setState({park})
@@ -131,7 +131,7 @@ class SimpleMap extends Component {
   
   handleDeleteUserEvent = (event) => {
     const eventID = event.target.value
-    const filteredEvents = this.state.userEvents.filter(event => event.id != eventID)
+    const filteredEvents = this.state.userEvents.filter(event => event.id !== eventID)
     this.setState({userEvents: filteredEvents})
 
     fetch((deleteUserEventsURL + eventID), { method: "DELETE" })
