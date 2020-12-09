@@ -95,7 +95,6 @@ class SimpleMap extends Component {
 
   showNewMarker = (location) => {
     this.setState({ marker: [...this.state.marker, location]})
-    console.log(this.state.marker)
   }
 
   handleClick = (location) => {
@@ -123,8 +122,6 @@ class SimpleMap extends Component {
   handleDelete = (event) => {
     const eventID = event.target.value
     const filteredEvents = this.state.park.events.filter(event => event.id != eventID)
-    console.log(this.state.park.events)
-    console.log(filteredEvents)
     const park = {...this.state.park}
     park.events = filteredEvents
     this.setState({park})
