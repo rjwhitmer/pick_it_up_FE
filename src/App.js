@@ -31,7 +31,7 @@ class SimpleMap extends Component {
 
   showMap = () => {
     return <GoogleMapReact
-      bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
+      bootstrapURLKeys={{ key: 'AIzaSyBUcpC0j7O6sKR5yAVVrKCsH08NSSqcQr0' }}
       defaultCenter={this.state.center}
       defaultZoom={this.state.zoom}
       yesIWantToUseGoogleMapApiInternals
@@ -46,7 +46,7 @@ class SimpleMap extends Component {
     Axios.get(mapAPI, {
       params: {
         address: this.state.newMarker, 
-        key: process.env.REACT_APP_GEOCODER_API_KEY
+        key: 'AIzaSyBFsbA9ExFBxQ-u5bITuD3-vs1_72c85Ww'
       }
     })
     .then(response => this.createNewMarker(response))
@@ -217,7 +217,7 @@ class SimpleMap extends Component {
     if (!localStorage.getItem('token'))
       return <LoginForm handleLogIn={this.handleLogIn}/>
     else
-      if (this.state.marker.length > 1)
+      // if (this.state.marker.length > 1)
       return (<>
                 <button 
                   className='log-out' 
@@ -238,7 +238,7 @@ class SimpleMap extends Component {
                 </div>
               </>
       );
-      else return null
+      // else return null
   }
 }
  
